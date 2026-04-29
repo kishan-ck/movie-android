@@ -44,38 +44,45 @@ class MovieDetailViewModel(application: Application) : AndroidViewModel(applicat
             detailUser.value = MovieDetailRequestModel(MovieID.value!!)
 
             CoroutineScope(Dispatchers.IO).launch {
-                val response = MovieDetailRepository.MovieDetails(detailUser.value!!, utils.Util.api_key)
+                try {
+                    val response = MovieDetailRepository.MovieDetails(detailUser.value!!, utils.Util.api_key)
 
-                withContext(Dispatchers.Main) {
+                    withContext(Dispatchers.Main) {
 
-                    movieDetailModel = response.body()
+                        movieDetailModel = response.body()
 
-                    if (response.isSuccessful) {
-                        when (response.code()) {
-                            200 -> {
-                                if (response.body() != null) {
-                                    MovieDetailResponse.value = movieDetailModel
-                                }
-                            }
-                        }
-                    } else
-                        when (response.code()) {
-                            401 -> {
-                                try {
-                                    val errorBody = response.errorBody()!!.string()
-                                    val gson = Gson()
-
-                                    movieDetailModel = gson.fromJson(errorBody, MovieDetailModel::class.java)
-                                    if (errorBody.contains("status_message")) {
-                                        setError(movieDetailModel!!.statusMessage)
+                        if (response.isSuccessful) {
+                            when (response.code()) {
+                                200 -> {
+                                    if (response.body() != null) {
+                                        MovieDetailResponse.value = movieDetailModel
                                     }
-                                } catch (e: IOException) {
-                                    e.printStackTrace()
                                 }
                             }
-                            500 -> setError(R.string.server_error)
-                            else -> setError(R.string.something_went_wrong)
-                        }
+                        } else
+                            when (response.code()) {
+                                401 -> {
+                                    try {
+                                        val errorBody = response.errorBody()!!.string()
+                                        val gson = Gson()
+
+                                        movieDetailModel = gson.fromJson(errorBody, MovieDetailModel::class.java)
+                                        if (errorBody.contains("status_message")) {
+                                            setError(movieDetailModel!!.statusMessage)
+                                        }
+                                    } catch (e: IOException) {
+                                        e.printStackTrace()
+                                    }
+                                }
+                                500 -> setError(R.string.server_error)
+                                else -> setError(R.string.something_went_wrong)
+                            }
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        e.printStackTrace()
+                        setError(R.string.something_went_wrong)
+                    }
                 }
             }
         }

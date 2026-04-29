@@ -13,7 +13,7 @@ import com.coderkube.movieapp.viewModel.MovieDetailViewModel
 class MovieDetailViewModelFactory  (private val application: Application) :
     ViewModelProvider.NewInstanceFactory() {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return MovieDetailViewModel(application) as T
     }
 }

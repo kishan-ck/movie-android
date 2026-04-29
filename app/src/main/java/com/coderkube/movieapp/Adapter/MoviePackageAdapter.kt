@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.coderkube.movieapp.Models.MovieList
 import com.coderkube.movieapp.R
+import com.coderkube.movieapp.databinding.RecyclerviewMovieListBinding
 import com.coderkube.movieapp.views.Activity.MovieDetailsActivity
-import kotlinx.android.synthetic.main.recyclerview_movie_list.view.*
 
 /**
  * use foe a set data for a movie list
@@ -22,9 +22,8 @@ class MoviePackageAdapter(
 ) : RecyclerView.Adapter<MoviePackageAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.recyclerview_movie_list, parent, false)
-        return ViewHolder(view)
+        val binding = RecyclerviewMovieListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     /**
@@ -38,28 +37,21 @@ class MoviePackageAdapter(
         return moviePackageArrayLiat.size
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        var movieDetailsTextView = itemView.movieDetailsTextView
-        var movierateTextView = itemView.movierateTextView
-        var movieDateTextView = itemView.movieDateTextView
-        var movieNameTextView = itemView.movieNameTextView
-        var moviePicImageView = itemView.moviePicImageView
-        var movieListLayout = itemView.movieListLayout
+    class ViewHolder(val binding: RecyclerviewMovieListBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun getData(items: MovieList.Result, position: Int, context: Context) {
-            movieNameTextView.text = items.originalTitle
-            movieDateTextView.text = items.releaseDate
-            movierateTextView.text = items.voteAverage.toString()
-            movieDetailsTextView.text = items.overview
+            binding.movieNameTextView.text = items.originalTitle
+            binding.movieDateTextView.text = items.releaseDate
+            binding.movierateTextView.text = items.voteAverage.toString()
+            binding.movieDetailsTextView.text = items.overview
 
             Glide.with(context)
-                .load(items.posterPath)
+                .load("https://image.tmdb.org/t/p/w500" + items.backdropPath)
                 .placeholder(R.mipmap.ic_launcher)
                 .error(R.mipmap.ic_launcher)
-                .into(moviePicImageView)
+                .into(binding.moviePicImageView)
 
-            movieListLayout.setOnClickListener(View.OnClickListener {
+            binding.movieListLayout.setOnClickListener(View.OnClickListener {
                 var intent = Intent(context , MovieDetailsActivity::class.java)
                 intent.putExtra("MovieID",items.id.toString())
                 intent.putExtra("releaseDate",items.releaseDate)
