@@ -1,20 +1,21 @@
 package com.coderkube.movieapp.views.Activity
 
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.coderkube.movieapp.R
+import com.coderkube.movieapp.Utils.BaseActivity
 import com.coderkube.movieapp.Utils.utils
 import com.coderkube.movieapp.databinding.ActivityMovieDetailsBinding
 import com.coderkube.movieapp.viewModel.MovieDetailViewModel
 import com.coderkube.movieapp.viewModelFactory.MovieDetailViewModelFactory
-import kotlinx.android.synthetic.main.toolbar.*
 
 //TODO MovieDetailsActivity
-class MovieDetailsActivity : AppCompatActivity() {
+class MovieDetailsActivity : BaseActivity() {
 
     /**
      * use for a data binding
@@ -34,11 +35,12 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details)
         binding?.lifecycleOwner = this
         binding?.movieDetailViewModel = movieDetailViewModel
 
-        toolbar_title.text = intent.getSerializableExtra("originalTitle").toString()
+        binding?.toolbar?.toolbarTitle?.text = intent.getSerializableExtra("originalTitle").toString()
 
         setUpObservers()
     }
@@ -68,13 +70,13 @@ class MovieDetailsActivity : AppCompatActivity() {
             movieDetailViewModel.moviedetail.value = movieData.overview
 
             Glide.with(application)
-                .load(movieData.posterPath)
+                .load("https://image.tmdb.org/t/p/w500" + movieData.posterPath)
                 .placeholder(R.mipmap.ic_launcher)
                 .error(R.mipmap.ic_launcher)
                 .into(binding!!.movieImageView)
 
             Glide.with(application)
-                .load(movieData.backdropPath)
+                .load("https://image.tmdb.org/t/p/w500" + movieData.backdropPath)
                 .placeholder(R.mipmap.ic_launcher)
                 .error(R.mipmap.ic_launcher)
                 .into(binding!!.movieImage)

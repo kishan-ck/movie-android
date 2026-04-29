@@ -14,7 +14,7 @@ import com.coderkube.movieapp.viewModel.MovieListViewModel
 class MovieListViewModelFactory (private val application: Application) :
     ViewModelProvider.NewInstanceFactory() {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return MovieListViewModel(application) as T
     }
 }

@@ -1,6 +1,7 @@
 package com.coderkube.movieapp.views.Activity
 
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -8,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.coderkube.movieapp.Adapter.MoviePackageAdapter
 import com.coderkube.movieapp.R
+import com.coderkube.movieapp.Utils.BaseActivity
 import com.coderkube.movieapp.Utils.utils
 import com.coderkube.movieapp.databinding.ActivityMainBinding
 import com.coderkube.movieapp.viewModel.MovieListViewModel
@@ -15,7 +17,7 @@ import com.coderkube.movieapp.viewModelFactory.MovieListViewModelFactory
 
 //TODO MainActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     /**
      * use for a data binding
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding?.lifecycleOwner = this
         binding?.movieViewModel = movieViewModel
